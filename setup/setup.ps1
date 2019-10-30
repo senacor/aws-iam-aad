@@ -85,16 +85,16 @@ else
 	    $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureAzurePassword)
 	    $azurePassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
     }
-
-    if ($azureUserName.StartsWith("{0}\" -f $azureADTenantName))
-    {
-	    $azureUserName = $azureUserName.Substring($azureUserName.IndexOf("\") + 1);
-    }
-	
-    if (!$azureUserName.EndsWith("@{0}" -f $azureADTenantName))
-    {
-	    $azureUserName = "{0}@{1}" -f $azureUserName, $azureADTenantName
-    }
+#
+#    if ($azureUserName.StartsWith("{0}\" -f $azureADTenantName))
+#    {
+#	    $azureUserName = $azureUserName.Substring($azureUserName.IndexOf("\") + 1);
+#    }
+#
+#    if (!$azureUserName.EndsWith("@{0}" -f $azureADTenantName))
+#    {
+#	    $azureUserName = "{0}@{1}" -f $azureUserName, $azureADTenantName
+#    }
     #endregion
 
     #region Testing credentials

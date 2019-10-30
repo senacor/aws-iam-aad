@@ -12,25 +12,22 @@
   permissions and limitations under the License.#>
 
 param (
-    [Parameter(Mandatory=$true)]
-    [string] $azureADTenantName,
-    [Parameter(Mandatory=$true)]
-    [string] $azureUserName, 
-    [Parameter(Mandatory=$true)]
-    [string] $azurePassword
+	[Parameter(Mandatory=$true)]
+	[string] $azureADTenantName,
+	[Parameter(Mandatory=$true)]
+	[string] $azureUserName,
+	[Parameter(Mandatory=$true)]
+	[string] $azurePassword
 )
 
 
 $AzureADAuthority = "https://login.microsoftonline.com/$azureADTenantName/oauth2/token"
 $resourceURL = "https://graph.windows.net/"
-$powerShellClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
 $params = @{
-		"resource" = $resourceURL;
-		"client_id" = $powerShellClientId;
-		"grant_type" = "password";
-		"username" = $azureUserName;
-		"password" = $azurePassword;
-		"scope" = "openid";
-	}	
+	"grant_type" = "client_credentials";
+	"client_id" = $azureUserName;
+	"client_secret" = $azurePassword;
+	"resource" = $resourceURL;
+}
 $azureResponse = Invoke-RestMethod -Method Post -Uri $AzureADAuthority -Body $params -Verbose -Debug
 return $azureResponse;
