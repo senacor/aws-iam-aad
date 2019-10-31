@@ -1,0 +1,56 @@
+---
+
+# Landing Zone Core Account Structure
+organizational_units:
+  # Landing Zone OU for Core accounts
+  - name: core
+    core_accounts:
+      # Primary account
+      - name: primary
+        core_resources:
+          - name: SSOAccountVPC
+            template_file: templates/aws_baseline/aws-landing-zone-vpc.template
+            parameter_file: parameters/azure-sso/aws-landing-zone-primary-sso-vpc.json
+            deploy_method: stack_set
+            regions:
+              - eu-central-1
+            ssm_parameters:
+              - name: /org/primary/sso-vpc/vpc_region
+                value: $[output_VPCRegion]
+              - name: /org/primary/sso-vpc/vpc_cidr
+                value: $[output_VPCCIDR]
+              - name: /org/primary/sso-vpc/vpc_id
+                value: $[output_VPCID]
+              - name: /org/primary/sso-vpc/private_subnet1_cidr
+                value: $[output_PrivateSubnet1ACIDR]
+              - name: /org/primary/sso-vpc/private_subnet1_id
+                value: $[output_PrivateSubnet1AID]
+              - name: /org/primary/sso-vpc/private_subnet2_cidr
+                value: $[output_PrivateSubnet2ACIDR]
+              - name: /org/primary/sso-vpc/private_subnet2_id
+                value: $[output_PrivateSubnet2AID]
+              - name: /org/primary/sso-vpc/public_subnet1_cidr
+                value: $[output_PublicSubnet1CIDR]
+              - name: /org/primary/sso-vpc/public_subnet1_id
+                value: $[output_PublicSubnet1ID]
+              - name: /org/primary/sso-vpc/public_subnet2_cidr
+                value: $[output_PublicSubnet2CIDR]
+              - name: /org/primary/sso-vpc/public_subnet2_id
+                value: $[output_PublicSubnet2ID]
+              - name: /org/primary/sso-vpc/vpc_private_route_ids
+                value: $[output_PrivateSubnetRouteTables]
+          - name: SSOSyncAzureBundle
+            template_file: templates/azure-sso/setup-env-cfn-template.json
+            parameter_file: parameters/azure-sso/setup-env-cfn-template.json
+            deploy_method: stack_set
+            regions:
+              - eu-central-1
+
+baseline_resources:
+  - name: azure-sso-cross-acount-roles
+    # This resource is part of which baseline(s) product
+    baseline_products:
+      - AWS-Landing-Zone-Account-Vending-Machine
+    template_file: templates/aws-iam-aad/cross-account-roles-cfn.json
+    parameter_file: parameters/aws-iam-aad/cross-account-roles-cfn.json
+    deploy_method: stack_set

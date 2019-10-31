@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "sso-aws-azure_rsa"
+  },
+  {
+    "ParameterKey": "SSHLocation",
+    "ParameterValue": "62.96.68.61/32"
+  },
+  {
+    "ParameterKey": "ExecFrequency",
+    "ParameterValue": "5"
+  },
+  {
+    "ParameterKey": "AzureADTennantName",
+    "ParameterValue": "senacor.onmicrosoft.com"
+  }
+]
