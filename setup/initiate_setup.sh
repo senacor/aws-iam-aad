@@ -46,6 +46,9 @@ do
 	fi
 done
 
+#Transmitting cloudformation files
+echo "scp -i ${PEM} ${DIR}/../cfn/saml-roles.json \"ec2-user@${IP}:/home/ec2-user/scripts/setup\"";scp -i "${PEM}" "${DIR}/../cfn/saml-roles.json" "ec2-user@${IP}:/home/ec2-user/scripts/setup"
+
 #Transmitting docker files
 for f in "${DIR}/../docker"/*
 do

@@ -165,6 +165,7 @@ $count = 0;
 $json = "["
 foreach ($a in $accounts)
 {
+	Write-Host "Account $a für update role"
 	#include only accounts other than root account
 	if ($a.Id -ne $identity.Account)
 	{
@@ -219,6 +220,7 @@ sudo /home/ec2-user/scripts/setup/docker-push.sh
 $SAMLRolesCfnPath = "{0}/saml-roles.json" -f $PSScriptRoot
 if ([System.IO.File]::Exists($SAMLRolesCfnPath))
 {
+	Write-Host "In if Exists SAML Roles"
 	#Replacing MetadataDocument with actual SAML certificate metadata
 	$SAMLCertificateStr = Get-Content $SAMLCertificateFilePath
 	$SAMLCertificateStr = $SAMLCertificateStr.Replace("`"", "\`"")
@@ -227,15 +229,19 @@ if ([System.IO.File]::Exists($SAMLRolesCfnPath))
 	Set-Content -Path $SAMLRolesCfnPath -Value $SAMLRolesCfn	
 	
 		#region Ascertaining account id of target accounts
-		$StackSetInstanceAccounts = New-Object string[] $arns.Count
-		$accounts = Get-ORGAccountList | Where-Object {$_.Status -Match "ACTIVE"} 
+	Write-Host "Found active arns: $arns.Count"
+		### use +1 to add the root account which has not been couted by the arns
+		$StackSetInstanceAccounts = New-Object string[] ($arns.Count+1)
+		$accounts = Get-ORGAccountList | Where-Object {$_.Status -Match "ACTIVE"}
+		Write-Host "Found active accounts: $accounts"
 		$count = 0;
 		$AccountsStr = ""
 		foreach ($a in $accounts)
 		{
+			Write-Host "Active account $a"
 			#Uncomment to include only accounts other than root account
 			#if ($a.Id -ne $identity.Account)
-			{
+			#{
 				$StackSetInstanceAccounts[$count++] = $a.Id		
 				if ([System.String]::IsNullOrWhiteSpace($AccountsStr))
 				{
@@ -245,7 +251,7 @@ if ([System.IO.File]::Exists($SAMLRolesCfnPath))
 				{
 					$AccountsStr = "{0},{1}" -f $AccountsStr, $a.Id
 				}
-			}
+			#}
 		}
 		$AccountsStrPath = "{0}/accounts.txt" -f $PSScriptRoot
 		Set-Content -Path $AccountsStrPath -Value $AccountsStr
@@ -268,7 +274,8 @@ if ([System.IO.File]::Exists($SAMLRolesCfnPath))
 		Get-CFNStackSetList
 		$StackSetInstanceRegions = New-Object string[] 1
 		$StackSetInstanceRegions[0] = $Region
-		
+
+		Write-Host "install Stackset Intanze for name: $appName, region: $StackSetInstanceRegions, account: $StackSetInstanceAccounts"
 		New-CFNStackInstance -StackSetName $appName -StackInstanceRegion $StackSetInstanceRegions -Account $StackSetInstanceAccounts
 	}
 }
