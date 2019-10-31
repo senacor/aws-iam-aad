@@ -572,25 +572,6 @@
         "Path": "/"
       }
     },
-    "CrossAccountRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version" : "2012-10-17",
-          "Statement": [ {
-            "Effect": "Allow",
-            "Principal": {
-              "AWS": { "Fn::Join" : ["", ["arn:aws:iam::", { "Ref": "AWS::AccountId" }, ":root" ]]}
-            },
-            "Action": [ "sts:AssumeRole" ]
-          } ]
-        },
-        "ManagedPolicyArns": [ "arn:aws:iam::aws:policy/IAMReadOnlyAccess" ],
-        "Path": "/",
-        "RoleName": "AWS_IAM_AAD_UpdateTask_CrossAccountRole"
-      }
-    },
-
     "ECSTaskRolePolicies": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
@@ -603,7 +584,7 @@
               "Action": [
                 "sts:AssumeRole"
               ],
-              "Resource": {"Fn::GetAtt": ["CrossAccountRole","Arn"]}
+              "Resource": "arn:aws:iam::????????????:role/AWS_IAM_AAD_UpdateTask_CrossAccountRole"
             },
             {
               "Effect": "Allow",
