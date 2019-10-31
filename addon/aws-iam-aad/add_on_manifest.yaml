@@ -10,7 +10,7 @@ organizational_units:
         core_resources:
           - name: SSOAccountVPC
             template_file: templates/aws_baseline/aws-landing-zone-vpc.template
-            parameter_file: parameters/azure-sso/aws-landing-zone-primary-sso-vpc.json
+            parameter_file: parameters/aws-iam-aad/aws-landing-zone-primary-sso-vpc.json
             deploy_method: stack_set
             regions:
               - eu-central-1
@@ -40,14 +40,14 @@ organizational_units:
               - name: /org/primary/sso-vpc/vpc_private_route_ids
                 value: $[output_PrivateSubnetRouteTables]
           - name: SSOSyncAzureBundle
-            template_file: templates/azure-sso/setup-env-cfn-template.json
-            parameter_file: parameters/azure-sso/setup-env-cfn-template.json
+            template_file: templates/aws-iam-aad/setup-env-cfn-template.json
+            parameter_file: parameters/aws-iam-aad/setup-env-cfn-template.json
             deploy_method: stack_set
             regions:
               - eu-central-1
 
 baseline_resources:
-  - name: azure-sso-cross-acount-roles
+  - name: aws-iam-aad-cross-acount-roles
     # This resource is part of which baseline(s) product
     baseline_products:
       - AWS-Landing-Zone-Account-Vending-Machine
